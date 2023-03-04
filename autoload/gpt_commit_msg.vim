@@ -25,45 +25,13 @@ function! gpt_commit_msg#gpt_commit_msg(...) abort
   let s:cmd_diff_text = []
   let s:cmd_gpt_text = []
 
-  call s:git_diff()
+  let diff_text = s:get_git_diff()
+  call s:get_gpt(diff_text)
 endfunction
 
-function! s:git_diff() abort
+function! s:get_git_diff() abort
   let cmd = ["git", "diff", "--cached"]
-
-  if has('nvim')
-    call jobstart(cmd, {
-          \ 'on_stdout': { id, data -> extend(s:cmd_diff_text, data) },
-          \ 'on_exit': { -> s:git_diff_result() },
-          \ })
-  else
-    call job_start(cmd, {
-          \ "out_cb": function("s:git_diff_out_cb"),
-          \ "err_cb": function("s:git_diff_out_cb"),
-          \ "exit_cb": function("s:git_diff_exit_cb"),
-          \ })
-  endif
-endfunction
-
-function! s:git_diff_out_cb(ch, msg) abort
-  call add(s:cmd_diff_text, a:msg)
-endfunction
-
-function! s:git_diff_exit_cb(job, status) abort
-  call s:git_diff_result()
-endfunction
-
-function! s:git_diff_result() abort
-  if has('nvim')
-    call remove(s:cmd_diff_text, -1)
-  endif
-
-  if empty(s:cmd_diff_text)
-    call s:echoerr("no diff")
-    return
-  endif
-
-  call s:get_gpt(join(s:cmd_diff_text, "\n"))
+  return system(cmd)
 endfunction
 
 function! s:get_gpt(diff_text) abort

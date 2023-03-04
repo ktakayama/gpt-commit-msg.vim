@@ -22,9 +22,6 @@ function! gpt_commit_msg#gpt_commit_msg(...) abort
 
   echo "Processing..."
 
-  let s:cmd_diff_text = []
-  let s:cmd_gpt_text = []
-
   let diff_text = s:get_git_diff()
   call s:get_gpt(diff_text)
 endfunction
@@ -36,6 +33,7 @@ endfunction
 
 function! s:get_gpt(diff_text) abort
   let cmd = s:create_gpt_cmd(a:diff_text)
+  let s:cmd_gpt_text = []
 
   if has('nvim')
     call jobstart(cmd, {

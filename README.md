@@ -14,7 +14,7 @@ eg: dein.vim
 repo = 'ktakayama/gpt-commit-msg.vim'
 ```
 
-Once you have installed the plugin, you will need to set up an API key from OpenAI. You can do this by following the instructions on the [OpenAI website](https://platform.openai.com/docs/developer-apis/api-keys).
+Once you have installed the plugin, you will need to set up an API key from OpenAI. You can do this by following the instructions on the [OpenAI website](https://platform.openai.com/docs/api-reference/introduction).
 
 ## Configuration
 

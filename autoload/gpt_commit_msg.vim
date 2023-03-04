@@ -122,8 +122,12 @@ function! s:get_gpt_result() abort
   call s:show_result(join(s:cmd_gpt_text, ""))
 endfunction
 
+function! s:get_content(json) abort
+  return (json_decode(a:json))['choices'][0]['message']['content']
+endfunction
+
 function! s:show_result(text) abort
-  let result = (json_decode(a:text))['choices'][0]['message']['content']
+  let result = s:get_content(a:text)
   echo result
 endfunction
 

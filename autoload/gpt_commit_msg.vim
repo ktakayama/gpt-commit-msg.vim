@@ -114,6 +114,16 @@ function! s:show_result(text) abort
   endif
 
   silent % d _
-  call setline(1, split(result, "\n"))
+  call setline(1, s:result_text_filter(split(result, "\n")))
 endfunction
 
+function! s:result_text_filter(text) abort
+  let result = []
+  for text in a:text
+    let t = substitute(text, "^[0-9][\.:] ", "", "")
+    let t = substitute(t, '^"\(.*\)"$', "\\1", "")
+    let t = substitute(t, '\.$', "", "")
+    call add(result, t)
+  endfor
+  return result
+endfunction

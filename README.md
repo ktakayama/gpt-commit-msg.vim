@@ -1,6 +1,6 @@
 # gpt-commit-msg.vim
 
-gpt-commit-msg is a Vim plugin that generates commit messages automatically using the OpenAI ChatGPT API based on the changes in git diff --cached. 
+gpt-commit-msg is a Vim plugin that generates commit messages automatically using the OpenAI ChatGPT API based on the changes in `git diff --cached`.
 
 ## Requirement
 - curl

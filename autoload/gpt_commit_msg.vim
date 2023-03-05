@@ -8,6 +8,9 @@ let s:gpt_prompt_header = get(g:, "gpt_commit_msg_prompt_header", "You are a mas
 let s:gpt_prompt_single = get(g:, "gpt_commit_msg_prompt_single", "Write only a concise Git commit message in present tense for the following diff:")
 let s:gpt_prompt_multiple = get(g:, "gpt_commit_msg_prompt_multiple", "Write three concise Git commit messages in present tense for the following diff:")
 
+let g:gpt_commit_msg = get(g:, 'gpt_commit_msg', {})
+let g:gpt_commit_msg.result_filter = get(g:gpt_commit_msg, "result_filter", { input -> input })
+
 function! s:echoerr(msg) abort
   echohl ErrorMsg
   echo "[gpt_commit_msg.vim]" a:msg
@@ -123,6 +126,7 @@ function! s:result_text_filter(text) abort
     let t = substitute(text, "^[0-9][\.:] ", "", "")
     let t = substitute(t, '^"\(.*\)"$', "\\1", "")
     let t = substitute(t, '\.$', "", "")
+    let t = g:gpt_commit_msg.result_filter(t)
     call add(result, t)
   endfor
   return result

@@ -58,7 +58,7 @@ function! s:create_gpt_cmd(text) abort
         \ "model": "gpt-3.5-turbo",
         \ "temperature": 0.3,
         \ "messages": [
-        \ {"role": "system", "content": s:gpt_prompt_header . s:gpt_prompt_single},
+        \ {"role": "system", "content": s:gpt_prompt_header . s:gpt_prompt_multiple},
         \ {"role": "user", "content": a:text}]
         \ })
   let cmd = cmd + ["--data-raw"]

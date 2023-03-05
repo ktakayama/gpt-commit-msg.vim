@@ -2,6 +2,7 @@
 " License: MIT
 
 let s:endpoint = get(g:, "gpt_commit_msg_endpoint", "https://api.openai.com/v1/chat/completions")
+let s:gpt_commit_msg_buf = "gpt-commit-msg://gpt-commit-msg-result"
 
 let s:gpt_prompt_header = "You are a master programmer. You are considering the contents of a Git commit message.\n"
 let s:gpt_prompt_single = "Write only a concise Git commit message in present tense for the following diff:"
@@ -85,7 +86,8 @@ function! s:get_gpt_result() abort
     return
   endif
 
-  call s:show_result(join(s:cmd_gpt_text, ""))
+  let result = s:get_content(join(s:cmd_gpt_text, ""))
+  call s:show_result(result)
 endfunction
 
 function! s:get_content(json) abort
@@ -93,7 +95,25 @@ function! s:get_content(json) abort
 endfunction
 
 function! s:show_result(text) abort
-  let result = s:get_content(a:text)
-  echo result
+  echo ""
+  let result = a:text
+  let window_size = 4
+
+  if bufexists(s:gpt_commit_msg_buf)
+    let buffer = bufnr(s:gpt_commit_msg_buf)
+    let window_id = win_findbuf(buffer)
+    if empty(window_id)
+      execute str2nr(window_size) . "new | e" s:gpt_commit_msg_buf
+    else
+      call win_gotoid(window_id[0])
+    endif
+  else
+    execute str2nr(window_size) . "new" s:gpt_commit_msg_buf
+    set buftype=nofile
+    set ft=gpt-commit-msg-result
+  endif
+
+  silent % d _
+  call setline(1, split(result, "\n"))
 endfunction
 

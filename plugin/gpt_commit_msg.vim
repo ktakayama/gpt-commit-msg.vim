@@ -9,6 +9,14 @@ endif
 
 let g:loaded_gpt_commit_msg = 1
 
+let g:gpt_commit_msg = get(g:, "gpt_commit_msg", {})
+
+let g:gpt_commit_msg.api_end_point = get(g:gpt_commit_msg, "api_end_point", "https://api.openai.com/v1/chat/completions")
+let g:gpt_commit_msg.prompt_header = get(g:gpt_commit_msg, "prompt_header", "You are a master programmer. You are considering the contents of a Git commit message. The commit message is a single-line commit message of less than 50 characters. Do not include file names or class names.\n")
+let g:gpt_commit_msg.prompt_single = get(g:gpt_commit_msg, "prompt_single", "Write only a concise Git commit message in present tense for the following diff:")
+let g:gpt_commit_msg.prompt_multiple = get(g:gpt_commit_msg, "prompt_multiple", "Write three concise Git commit messages in present tense for the following diff:")
+let g:gpt_commit_msg.result_filter = get(g:gpt_commit_msg, "result_filter", { input -> input })
+
 command! -nargs=? GPTCommitMsg call gpt_commit_msg#gpt_commit_msg(<f-args>)
 
 nnoremap <silent> <Plug>(GPTCommitMsg) :<C-u>GPTCommitMsg<CR>

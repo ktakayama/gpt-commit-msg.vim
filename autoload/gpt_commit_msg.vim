@@ -1,15 +1,7 @@
 " Author: ktakayama <loiseau@gmail.com>
 " License: MIT
 
-let s:endpoint = get(g:, "gpt_commit_msg_endpoint", "https://api.openai.com/v1/chat/completions")
 let s:gpt_commit_msg_buf = "gpt-commit-msg://gpt-commit-msg-result"
-
-let s:gpt_prompt_header = get(g:, "gpt_commit_msg_prompt_header", "You are a master programmer. You are considering the contents of a Git commit message. The commit message is a single-line commit message of less than 50 characters. Do not include file names or class names.\n")
-let s:gpt_prompt_single = get(g:, "gpt_commit_msg_prompt_single", "Write only a concise Git commit message in present tense for the following diff:")
-let s:gpt_prompt_multiple = get(g:, "gpt_commit_msg_prompt_multiple", "Write three concise Git commit messages in present tense for the following diff:")
-
-let g:gpt_commit_msg = get(g:, 'gpt_commit_msg', {})
-let g:gpt_commit_msg.result_filter = get(g:gpt_commit_msg, "result_filter", { input -> input })
 
 function! s:echoerr(msg) abort
   echohl ErrorMsg
@@ -54,14 +46,14 @@ function! s:get_gpt(diff_text) abort
 endfunction
 
 function! s:create_gpt_cmd(text) abort
-  let cmd = ["curl", "--location", "--insecure", "--request", "POST", s:endpoint]
-  let cmd = cmd + ["--header", "Authorization: Bearer " . g:gpt_commit_msg_api_key]
+  let cmd = ["curl", "--location", "--insecure", "--request", "POST", g:gpt_commit_msg.api_end_point]
+  let cmd = cmd + ["--header", "Authorization: Bearer " . g:gpt_commit_msg.api_key]
   let cmd = cmd + ["--header", "Content-Type: application/json"]
   let body = json_encode({
         \ "model": "gpt-3.5-turbo",
         \ "temperature": 0.3,
         \ "messages": [
-        \ {"role": "system", "content": s:gpt_prompt_header . s:gpt_prompt_multiple},
+        \ {"role": "system", "content": g:gpt_commit_msg.prompt_header . g:gpt_commit_msg.prompt_multiple},
         \ {"role": "user", "content": a:text}]
         \ })
   let cmd = cmd + ["--data-raw"]

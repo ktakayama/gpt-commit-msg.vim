@@ -21,7 +21,8 @@ Once you have installed the plugin, you will need to set up an API key from Open
 You can configure the gpt-commit-msg plugin by setting the following variables in your Vim configuration file:
 
 ```vim
-let g:gpt_commit_msg_api_key = "<YOUR_API_KEY>"
+let g:gpt_commit_msg = {}
+let g:gpt_commit_msg.api_key = "<YOUR_API_KEY>"
 ```
 
 ##  Usage

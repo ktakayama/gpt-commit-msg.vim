@@ -4,9 +4,9 @@
 let s:endpoint = get(g:, "gpt_commit_msg_endpoint", "https://api.openai.com/v1/chat/completions")
 let s:gpt_commit_msg_buf = "gpt-commit-msg://gpt-commit-msg-result"
 
-let s:gpt_prompt_header = "You are a master programmer. You are considering the contents of a Git commit message. The commit message with a single short (less than 50 character) line. Do not include file names or class names.\n"
-let s:gpt_prompt_single = "Write only a concise Git commit message in present tense for the following diff:"
-let s:gpt_prompt_multiple = "Write three concise Git commit messages in present tense for the following diff:"
+let s:gpt_prompt_header = get(g:, "gpt_commit_msg_prompt_header", "You are a master programmer. You are considering the contents of a Git commit message. The commit message with a single short (less than 50 character) line. Do not include file names or class names.\n")
+let s:gpt_prompt_single = get(g:, "gpt_commit_msg_prompt_single", "Write only a concise Git commit message in present tense for the following diff:")
+let s:gpt_prompt_multiple = get(g:, "gpt_commit_msg_prompt_multiple", "Write three concise Git commit messages in present tense for the following diff:")
 
 function! s:echoerr(msg) abort
   echohl ErrorMsg

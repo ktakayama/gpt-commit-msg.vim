@@ -115,6 +115,7 @@ function! s:show_result(text) abort
           \ }
     let s:popup_window_id = nvim_open_win(buffer, v:true, opts)
     call nvim_buf_set_lines(buffer, 0, -1, v:true, result)
+    call s:setup_map()
   else
     if bufexists(s:gpt_commit_msg_buf)
       let buffer = bufnr(s:gpt_commit_msg_buf)
@@ -128,6 +129,7 @@ function! s:show_result(text) abort
       execute str2nr(max_height) . "new" s:gpt_commit_msg_buf
       set buftype=nofile
       set ft=gpt-commit-msg-result
+      call s:setup_map()
     endif
 
     silent % d _
@@ -142,6 +144,17 @@ function! s:close_popup(window_id) abort
   if !empty(getwininfo(a:window_id))
     call nvim_win_close(a:window_id, v:true)
   endif
+endfunction
+
+function! s:setup_map() abort
+  nnoremap <silent> <buffer> <CR> :<C-u>call <SID>yank_result()<CR>
+endfunction
+
+function! s:yank_result() abort
+  let value = getline('.')
+  call setreg(v:register, value . "\n")
+  redraw | echo printf("The result text '%s' has yanked.", value)
+  execute 'bwipeout!'
 endfunction
 
 function! s:result_text_filter(text) abort

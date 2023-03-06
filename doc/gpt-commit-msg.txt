@@ -1,0 +1,61 @@
+*gpt-commit-msg.txt* Automatically generates commit messages using ChatGPT API
+
+Author: Kyosuke Takayama
+
+==============================================================================
+Contents                                                      *gpt-commit-msg*
+
+Introduction ................................... |gpt-commit-msg-introduction|
+Usage...................................................|gpt-commit-msg-usage|
+Configuration ................................. |gpt-commit-msg-configuration|
+
+
+==============================================================================
+Introduction                                     *gpt-commit-msg-introduction*
+
+This plugin automatically generates commit messages using the OpenAI ChatGPT
+API based on the changes in `git diff --cached`.
+
+
+==============================================================================
+Usage                                                   *gpt-commit-msg-usage*
+                                                               *:GPTCommitMsg*
+
+To use this plugin, simply run the `:GPTCommitMsg` command while in a Git
+repository. This will generate a commit message based on the changes made in
+the repository.
+
+After running `:GPTCommitMsg` you will see a results window with the commit
+messages generated. Move the cursor over the message you like and `<CR>` to
+yank it.
+
+
+==============================================================================
+Configuration                                   *gpt-commit-msg-configuration*
+
+                                                    *g:gpt_commit_msg.api_key*
+g:gpt_commit_msg.api_key~
+
+  Your OpenAI API key. (Required)
+
+                                          *g:gpt_commit_msg.max_lines_to_send*
+g:gpt_commit_msg.max_lines_to_send~
+
+  The maximum number of lines of Git diff text to send to the ChatGPT API.
+  default value: 2000
+
+                                              *g:gpt_commit_msg.result_filter*
+g:gpt_commit_msg.result_filter~
+
+  A function to filter the generated commit message.
+  Example of changing the first string to lower case.
+
+>
+  let g:gpt_commit_msg = {}
+  function! g:gpt_commit_msg.result_filter(text) abort
+    return substitute(a:text, '^\(.\)', '\L\1', '')
+  endfunction
+<
+
+==============================================================================
+vim:ft=help:tw=78

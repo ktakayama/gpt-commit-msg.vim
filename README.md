@@ -1,6 +1,6 @@
 # gpt-commit-msg.vim
 
-gpt-commit-msg is a Vim plugin that generates commit messages automatically using the OpenAI ChatGPT API based on the changes in `git diff --cached`.
+gpt-commit-msg is a Vim plugin that automatically generates Git commit messages using the OpenAI ChatGPT API based on the changes in `git diff --cached.`
 
 ## Requirement
 - curl
@@ -18,7 +18,7 @@ Once you have installed the plugin, you will need to set up an API key from Open
 
 ## Configuration
 
-You can configure the gpt-commit-msg plugin by setting the following variables in your Vim configuration file:
+You can configure this plugin by setting the following variables in your .vimrc:
 
 ### Required
 
@@ -33,7 +33,7 @@ let g:gpt_commit_msg.api_key = "<YOUR_API_KEY>"
 " The maximum number of lines of Git diff text to send to the ChatGPT API
 let g:gpt_commit_msg.max_lines_to_send = 2000
 
-" A function that filters the generated commit message
+" A function to filter the generated commit message
 function! g:gpt_commit_msg.result_filter(text) abort
   return substitute(a:text, '^\(.\)', '\L\1', '')
 endfunction
@@ -47,7 +47,7 @@ augroup END
 
 ##  Usage
 
-To use the gpt-commit-msg plugin, simply run the `:GPTCommitMsg` command while in a Git repository. This will generate a commit message based on the changes made in the repository.
+To use this plugin, simply run the `:GPTCommitMsg` command while in a Git repository. This will generate a commit message based on the changes made in the repository.
 
-After running `:GPTCommitMsg`, a result window will appear with the generated commit messages. You can select the message you like by moving the cursor to it and pressing `<CR>`. This will yank the message to the default register, which you can then paste with the `p` command.
+After running `:GPTCommitMsg` you will see a results window with the commit messages generated. Move the cursor over the message you like and `<CR>` to yank it.
 

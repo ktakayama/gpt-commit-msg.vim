@@ -2,6 +2,7 @@
 " License: MIT
 
 let s:gpt_commit_msg_buf = "gpt-commit-msg://gpt-commit-msg-result"
+let s:popup_window_id = 0
 
 function! s:echoerr(msg) abort
   echohl ErrorMsg
@@ -91,25 +92,56 @@ endfunction
 
 function! s:show_result(text) abort
   echo ""
-  let result = a:text
-  let window_size = 4
+  let result = s:result_text_filter(split(a:text, "\n"))
+  let max_height = len(result)
+  let max_width = 80
 
-  if bufexists(s:gpt_commit_msg_buf)
-    let buffer = bufnr(s:gpt_commit_msg_buf)
-    let window_id = win_findbuf(buffer)
-    if empty(window_id)
-      execute str2nr(window_size) . "new | e" s:gpt_commit_msg_buf
-    else
-      call win_gotoid(window_id[0])
-    endif
+  if exists('*nvim_create_buf')
+    call s:close_popup(s:popup_window_id)
+
+    let buffer = nvim_create_buf(v:false, v:true)
+    call nvim_buf_set_option(buffer, 'bufhidden', 'wipe')
+    call nvim_buf_set_option(buffer, 'swapfile', v:false)
+    call setbufvar(buffer, '&filetype', 'gpt-commit-msg-result')
+
+    let opts = {
+          \ 'relative': 'win',
+          \ 'width': max_width,
+          \ 'height': max_height,
+          \ 'bufpos': [line("."), 0],
+          \ 'row': 0,
+          \ 'col': 0,
+          \ 'style': 'minimal'
+          \ }
+    let s:popup_window_id = nvim_open_win(buffer, v:true, opts)
+    call nvim_buf_set_lines(buffer, 0, -1, v:true, result)
   else
-    execute str2nr(window_size) . "new" s:gpt_commit_msg_buf
-    set buftype=nofile
-    set ft=gpt-commit-msg-result
-  endif
+    if bufexists(s:gpt_commit_msg_buf)
+      let buffer = bufnr(s:gpt_commit_msg_buf)
+      let window_id = win_findbuf(buffer)
+      if empty(window_id)
+        execute str2nr(window_size) . "new | e" s:gpt_commit_msg_buf
+      else
+        call win_gotoid(window_id[0])
+      endif
+    else
+      execute str2nr(max_height) . "new" s:gpt_commit_msg_buf
+      set buftype=nofile
+      set ft=gpt-commit-msg-result
+    endif
 
-  silent % d _
-  call setline(1, s:result_text_filter(split(result, "\n")))
+    silent % d _
+    call setline(1, result)
+  endif
+endfunction
+
+function! s:close_popup(window_id) abort
+  if win_getid() == a:window_id
+    return
+  endif
+  if !empty(getwininfo(a:window_id))
+    call nvim_win_close(a:window_id, v:true)
+  endif
 endfunction
 
 function! s:result_text_filter(text) abort

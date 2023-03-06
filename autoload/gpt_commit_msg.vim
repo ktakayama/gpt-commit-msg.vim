@@ -20,12 +20,22 @@ function! gpt_commit_msg#gpt_commit_msg(...) abort
   echo "Processing..."
 
   let diff_text = s:get_git_diff()
+  let diff_text = s:cut_diff_text(diff_text)
   call s:get_gpt(diff_text)
 endfunction
 
 function! s:get_git_diff() abort
   let cmd = ["git", "diff", "--cached"]
   return system(cmd)
+endfunction
+
+function! s:cut_diff_text(text) abort
+  let max_lines = g:gpt_commit_msg.max_lines_to_send
+  let lines = split(a:text, '\n')
+  if len(lines) < max_lines
+    return a:text
+  endif
+  return join(lines[0:max_lines-2], "\n")
 endfunction
 
 function! s:get_gpt(diff_text) abort

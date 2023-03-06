@@ -25,7 +25,10 @@ function! gpt_commit_msg#gpt_commit_msg(...) abort
 endfunction
 
 function! s:get_git_diff() abort
-  let cmd = ["git", "diff", "--cached"]
+  let cmd = ["git", "diff", "--cached", "--",
+        \ ":(exclude)*.lock",
+        \ ":(exclude)package-lock.json"
+        \]
   return system(cmd)
 endfunction
 

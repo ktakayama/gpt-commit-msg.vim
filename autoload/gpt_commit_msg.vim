@@ -95,12 +95,27 @@ function! s:get_gpt_result() abort
     return
   endif
 
-  let result = s:get_content(join(s:cmd_gpt_text, ""))
-  call s:show_result(result)
+  let json = json_decode(join(s:cmd_gpt_text, ""))
+  let error = s:check_error(json)
+  if empty(error)
+    let result = s:get_content(json)
+    call s:show_result(result)
+  else
+    call s:echoerr(error)
+  endif
+endfunction
+
+function! s:check_error(json) abort
+   if has_key(a:json, 'error')
+    let error_object = a:json['error']
+    let error_code = error_object['code']
+    let error_message = error_object['message']
+    return 'API Request error: ' . error_code . ', ' . error_message
+  endif
 endfunction
 
 function! s:get_content(json) abort
-  return (json_decode(a:json))['choices'][0]['message']['content']
+  return a:json['choices'][0]['message']['content']
 endfunction
 
 function! s:show_result(text) abort

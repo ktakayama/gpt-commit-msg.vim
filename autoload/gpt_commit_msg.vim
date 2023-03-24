@@ -64,7 +64,7 @@ function! s:create_gpt_cmd(text) abort
   let cmd = cmd + ["--header", "Authorization: Bearer " . g:gpt_commit_msg.api_key]
   let cmd = cmd + ["--header", "Content-Type: application/json"]
   let body = json_encode({
-        \ "model": "gpt-3.5-turbo",
+        \ "model": g:gpt_commit_msg.api_model,
         \ "temperature": 0.3,
         \ "messages": [
         \ {"role": "system", "content": g:gpt_commit_msg.prompt_header . g:gpt_commit_msg.prompt_body},

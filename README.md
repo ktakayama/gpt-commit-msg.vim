@@ -32,6 +32,9 @@ let g:gpt_commit_msg.api_key = "<YOUR_API_KEY>"
 ### Optional
 
 ```vim
+" ID of the model to use
+let g:gpt_commit_msg.api_model = "gpt-3.5-turbo"
+
 " The maximum number of lines of Git diff text to send to the ChatGPT API
 let g:gpt_commit_msg.max_lines_to_send = 2000
 

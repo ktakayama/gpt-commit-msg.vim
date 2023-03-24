@@ -38,6 +38,12 @@ g:gpt_commit_msg.api_key~
 
   Your OpenAI API key. (Required)
 
+                                                  *g:gpt_commit_msg.api_model*
+g:gpt_commit_msg.api_model~
+
+  ID of the model to use.
+  default value: gpt-3.5-turbo
+
                                           *g:gpt_commit_msg.max_lines_to_send*
 g:gpt_commit_msg.max_lines_to_send~
 
